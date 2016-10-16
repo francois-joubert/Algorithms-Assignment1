@@ -12,11 +12,14 @@ namespace Assignment1
     static void Main(string[] args)
     {
       var input = Read("input.txt");
+      //var input = Read("inputTest.txt");
 
-      int[] sorted;
-      var res = SortAndCountInv(input, out sorted);
+      var cmpCnt = SortAndCountCmp(ref input, 0, input.Length);
 
-      Console.WriteLine(res);
+      input.ToList().ForEach(x => Console.WriteLine(x));
+
+      Console.WriteLine("=============================");
+      Console.WriteLine(cmpCnt);
 
       Console.ReadLine();
     }
@@ -41,66 +44,87 @@ namespace Assignment1
       return input.ToArray();
     }
 
-    public static long SortAndCountInv(int[] input, out int[] sorted)
+    public static int SortAndCountCmp(ref int[] input, int a, int b)
     {
-      var l = input.Length;
-
-      if (l == 1)
+      if (b <= a + 1)
       {
-        sorted = input;
         return 0;
       }
 
-      int h1 = l / 2;
+      int p, cmpCnt;
+      PartitionAndCountCmp(ref input, a, b, out p, out cmpCnt);
 
-      var sub1 = input.Take(h1).ToArray();
-      var sub2 = input.Skip(h1).ToArray();
-      int[] sorted1, sorted2;
+      var cmpCntA = SortAndCountCmp(ref input, a, p);
+      var cmpCntB = SortAndCountCmp(ref input, p + 1, b);
 
-      var n1 = SortAndCountInv(sub1, out sorted1);
-      var n2 = SortAndCountInv(sub2, out sorted2);
-
-      var split = CountSplitInv(sorted1, sorted2, out sorted);
-
-      return n1 + n2 + split;
+      return cmpCnt + cmpCntA + cmpCntB;
     }
 
-    public static long CountSplitInv(int[] sortedInput1, int[] sortedInput2, out int[] merged)
+    public static void PartitionAndCountCmp(ref int[] input, int a, int b, out int p, out int cmpCnt)
     {
-      int i = 0, j = 0;
-      var res = new List<int>();
-      var l1 = sortedInput1.Length;
-      var l2 = sortedInput2.Length;
-      long count = 0;
+      // No swap for first.
+      // Swap element with first for any other pivot choice.
 
-      for (int k = 0; k < l1 + l2; k++)
+      input = input.Swap(a, b - 1); // use last for pivot
+
+      //var mIdx = FindMedianIndex(input, a, b - 1);
+      //input = input.Swap(a, mIdx); // use median for pivot
+
+      p = a;
+
+      // swap pivot to 1st
+
+      for (int i = a + 1; i < b; i++)
       {
-        if (i == l1)
+        if (input[i] < input[a])
         {
-          res.AddRange(sortedInput2.Skip(j));
-          break;
-        }
-        else if (j == l2)
-        {
-          res.AddRange(sortedInput1.Skip(i));
-          break;
-        }
-
-        if (sortedInput1[i] < sortedInput2[j])
-        {
-          res.Add(sortedInput1[i]);
-          i++;
-        }
-        else
-        {
-          res.Add(sortedInput2[j]);
-          count += l1 - i;
-          j++;
+          p++;
+          input = input.Swap(p, i);
         }
       }
-      merged = res.ToArray();
 
-      return count;
+      input = input.Swap(p, a);
+
+      cmpCnt = b - a - 1;
+    }
+
+    public static int FindMedianIndex(int[] input, int a, int b)
+    {
+      if (b == a + 1)
+      {
+        return a;
+      }
+
+      int mid = (int)Math.Floor((a + b) / 2.0);
+
+      if (input[mid] > input[a] && input[mid] < input[b])
+      {
+        return mid;
+      }
+      else if (input[a] > input[mid] && input[a] < input[b])
+      {
+        return a;
+      }
+      else
+      {
+        return b;
+      }
+    }
+  }
+
+  public static class Ext
+  {
+    public static int[] Swap(this int[] array, int a, int b)
+    {
+      var x = array[a];
+      array[a] = array[b];
+      array[b] = x;
+
+      return array;
     }
   }
 }
+
+//162085
+//164123
+//160133,145139,145139,
