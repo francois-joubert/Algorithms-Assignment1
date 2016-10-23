@@ -1,0 +1,12 @@
+f:\users\fj\dev\Algorithms\Assignment3\bin\Debug\Assignment3.exe.config
+f:\users\fj\dev\Algorithms\Assignment3\bin\Debug\Assignment3.exe
+f:\users\fj\dev\Algorithms\Assignment3\bin\Debug\Assignment3.pdb
+f:\users\fj\dev\Algorithms\Assignment3\obj\Debug\Assignment3.csprojResolveAssemblyReference.cache
+f:\users\fj\dev\Algorithms\Assignment3\obj\Debug\Assignment3.exe
+f:\users\fj\dev\Algorithms\Assignment3\obj\Debug\Assignment3.pdb
+D:\Dev\Algorithms\Assignment3\bin\Debug\Assignment3.exe.config
+D:\Dev\Algorithms\Assignment3\obj\Debug\Assignment3.exe
+D:\Dev\Algorithms\Assignment3\obj\Debug\Assignment3.pdb
+D:\Dev\Algorithms\Assignment3\bin\Debug\Assignment3.exe
+D:\Dev\Algorithms\Assignment3\bin\Debug\Assignment3.pdb
+D:\Dev\Algorithms\Assignment3\obj\Debug\Assignment3.csprojResolveAssemblyReference.cache
