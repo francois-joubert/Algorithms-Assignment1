@@ -14,7 +14,7 @@ namespace Assignment3
       var input = ReadAdj("input.txt");
       //var input = Read("inputTest.txt");
 
-      var minCut = CalcMinCut(input, 1);
+      var minCut = CalcMinCut(input, 100);
 
       //input.ToList().ForEach(x => Console.WriteLine(x));
 
@@ -49,63 +49,93 @@ namespace Assignment3
 
     public static int CalcMinCut(int[][] input, int itr)
     {
-      var inp = input.ToList();
-      var lookup = new Dictionary<int, int>();
-      var contr = 0;
+      var minCntCnt = int.MaxValue;
 
       for (; itr > 0; itr--)
       {
+        var inp = input.ToList();
+        var lookup = new Dictionary<int, int>();
+        var contr = 0;
+
+        var r = new Random((int)DateTime.Now.Ticks);
+
         while (contr < inp.Count - 3)
         {
-          var r = new Random((int)DateTime.Now.Ticks);
+          var vertexA = r.Next(inp.Count - 1) + 1;
 
-          var rvi = r.Next(inp.Count) + 1;
-          var v1 = inp[rvi];
-          if (v1 == null)
+          var adjListA = inp[vertexA];
+          if (adjListA == null) { continue; }
+
+          Console.Write($"{vertexA}, ");
+
+          var adjIdx = r.Next(adjListA.Length);
+          var vertexB = adjListA[adjIdx];
+          while (lookup.ContainsKey(vertexB))
           {
-            continue;
+            vertexB = lookup[vertexB];
           }
 
-          var rei = r.Next(v1.Length);
-          var avi = v1[rei];
-          if (lookup.ContainsKey(avi))
-          {
-            avi = lookup[avi];
-          }
+          if (vertexB == vertexA) { continue; }
 
-          var v2 = inp[avi];
-          inp[rvi] = v1.Concat(v2).ToArray();
-          inp[avi] = null;
-          lookup.Add(avi, rvi);
+          var adjListB = inp[vertexB];
+          inp[vertexA] = adjListA.Concat(adjListB).ToArray();
+          inp[vertexB] = null;
+
+          lookup.Add(vertexB, vertexA);
+
+          foreach (var kv in lookup.Where(kv => kv.Value == vertexB).ToList())
+          {
+            lookup[kv.Key] = vertexA;
+          }
 
           contr++;
         }
-      }
 
-      var lastV1 = 0;
-      var lastV2 = 0;
-      for (int i = 1; i <= inp.Count; i++)
-      {
-        if (inp[i] != null)
+        var lastV1 = 0;
+        var lastV2 = 0;
+        for (int i = 1; i <= inp.Count; i++)
         {
-          if (lastV1 == 0)
+          if (inp[i] != null)
           {
-            lastV1 = i;
-          }
-          else
-          {
-            lastV2 = i;
-            break;
+            if (lastV1 == 0)
+            {
+              lastV1 = i;
+            }
+            else
+            {
+              lastV2 = i;
+              break;
+            }
           }
         }
-      }
 
-      var minCntCnt = 0;
-      foreach (var p in inp[lastV1])
-      {
-        if (p == lastV2 || lookup[p] == lastV2)
+        var currentMinCntCnt = 0;
+        foreach (var p in inp[lastV1])
         {
-          minCntCnt++;
+          if (p != lastV1 && (p == lastV2 || lookup[p] == lastV2))
+          {
+            currentMinCntCnt++;
+          }
+          //else
+          //{
+          //  var p1 = p;
+          //  while (lookup.ContainsKey(p1))
+          //  {
+          //    p1 = lookup[p1];
+          //  }
+          //  if (p1 == lastV2)
+          //  {
+          //    minCntCnt++;
+          //  }
+          //}
+        }
+
+        Console.WriteLine($"-> {currentMinCntCnt}");
+        Console.WriteLine();
+
+        if (currentMinCntCnt < minCntCnt)
+        {
+          minCntCnt = currentMinCntCnt;
         }
       }
 
