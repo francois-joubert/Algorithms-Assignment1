@@ -11,17 +11,17 @@ namespace Assignment1
   {
     static void Main(string[] args)
     {
-      var input = Read("input.txt");
+      var input = Read("input10.txt");
       //var input = Read("inputTest.txt");
 
       var cmpCnt = SortAndCountCmp(ref input, 0, input.Length);
 
-      input.ToList().ForEach(x => Console.WriteLine(x));
+      //input.ToList().ForEach(x => Console.WriteLine(x));
 
       Console.WriteLine("=============================");
       Console.WriteLine(cmpCnt);
 
-      Console.ReadLine();
+      Console.ReadKey();
     }
 
 
@@ -65,10 +65,10 @@ namespace Assignment1
       // No swap for first.
       // Swap element with first for any other pivot choice.
 
-      input = input.Swap(a, b - 1); // use last for pivot
+      //input = input.Swap(a, b - 1); // use last for pivot
 
-      //var mIdx = FindMedianIndex(input, a, b - 1);
-      //input = input.Swap(a, mIdx); // use median for pivot
+      var mIdx = FindMedianIndex(input, a, b - 1);
+      input = input.Swap(a, mIdx); // use median for pivot
 
       p = a;
 
@@ -90,25 +90,31 @@ namespace Assignment1
 
     public static int FindMedianIndex(int[] input, int a, int b)
     {
-      if (b == a + 1)
-      {
-        return a;
-      }
+      //if (b == a + 1)
+      //{
+      //  return a;
+      //}
 
       int mid = (int)Math.Floor((a + b) / 2.0);
 
       if (input[mid] > input[a] && input[mid] < input[b])
       {
-        return mid;
+        //return mid;
       }
       else if (input[a] > input[mid] && input[a] < input[b])
       {
-        return a;
+        //return a;
       }
       else
       {
-        return b;
+        //return b;
       }
+
+      var list = new List<int> { input[a], input[mid], input[b] };
+      list.Sort();
+
+      var res = input.ToList().IndexOf(list[1]);
+      return res;
     }
   }
 
@@ -127,4 +133,4 @@ namespace Assignment1
 
 //162085
 //164123
-//160133,145139,145139,
+//160133, 145139, 145139, 155495
