@@ -12,7 +12,7 @@ namespace Assignment4
   {
     static void Main(string[] args)
     {
-      var graph = ReadEdges("inputTest2.txt");
+      var graph = ReadEdges("input.txt");
       List<int> list = null;
 
       var t = new Thread(() => {
@@ -22,7 +22,7 @@ namespace Assignment4
       t.Start();
       t.Join();
 
-      foreach (var size in list)
+      foreach (var size in list.Take(10))
       {
         Console.Write(size + ",");
       }
@@ -113,9 +113,20 @@ namespace Assignment4
       }
     }
 
-    public List<Vertex> GetConnected(int id)
+    public List<Vertex> GetConnected(Vertex vertex, bool reverse)
     {
-      return _AdjList[id];
+      if (!reverse && _AdjList.ContainsKey(vertex.Id))
+      {
+        return _AdjList[vertex.Id];
+      }
+      else if (reverse && _RevAdjList.ContainsKey(vertex.Id))
+      {
+        return _RevAdjList[vertex.Id];
+      }
+      else
+      {
+        return new List<Vertex>();
+      }
     }
 
     public List<Vertex> GetUnexploredConnected(int id, Dictionary<int, List<Vertex>> adjList)
@@ -139,13 +150,16 @@ namespace Assignment4
 
     public void Dfs(Vertex start, Action<Vertex> action, bool reverse = false)
     {
-      var unexplored = GetUnexploredConnected(start.Id, reverse ? _RevAdjList : _AdjList);
-      for (int i = 0; i < unexplored.Count; i++)
+      var connected = GetConnected(start, reverse);
+      for (int i = 0; i < connected.Count; i++)
       {
-        var vertex = unexplored[i];
-        vertex.Explored = true;
-        action(vertex);
-        Dfs(vertex, action, reverse);
+        var vertex = connected[i];
+        if (!vertex.Explored)
+        {
+          vertex.Explored = true;
+          action(vertex);
+          Dfs(vertex, action, reverse);
+        }
       }
     }
 
@@ -164,7 +178,8 @@ namespace Assignment4
       ResetExplored();
 
       var sccSizes = new List<int>();
-      for (int i = 0; i < list.Count; i++)
+      for (int i = list.Count - 1; i >= 0; i--)
+      //for (int i = 0; i < list.Count; i++)
       {
         var vertex = list[i];
         if (!vertex.Explored)
@@ -175,9 +190,7 @@ namespace Assignment4
         }
       }
 
-      sccSizes.Sort();
-
-      return sccSizes;
+      return sccSizes.OrderByDescending(x => x).ToList();
     }
   }
 
