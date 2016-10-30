@@ -1,0 +1,15 @@
+.vs/
+bin/
+obj/
+
+Test.config
+User.config
+
+*.suo
+*.log
+*.user
+
+TestResults/
+Database/Create Zeno Database.sql
+Database/Update Zeno Database.sql
+/Documentation/API Docs/gen
