@@ -12,9 +12,11 @@ namespace Assignment4
   {
     static void Main(string[] args)
     {
-      var graph = ReadEdges("input.txt");
-      List<int> list = null;
+      var graph = ReadEdges("inputTest4.txt");   // 3,3,1,1,0
 
+      Console.WriteLine("Graph imported.");
+
+      List<int> list = null;
       var t = new Thread(() => {
         list = graph.FindScc();
       }, 10000000);
@@ -150,14 +152,15 @@ namespace Assignment4
 
     public void Dfs(Vertex start, Action<Vertex> action, bool reverse = false)
     {
+      start.Explored = true;
+      action(start);
+
       var connected = GetConnected(start, reverse);
       for (int i = 0; i < connected.Count; i++)
       {
         var vertex = connected[i];
         if (!vertex.Explored)
         {
-          vertex.Explored = true;
-          action(vertex);
           Dfs(vertex, action, reverse);
         }
       }
