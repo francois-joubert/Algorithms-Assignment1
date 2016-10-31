@@ -12,7 +12,11 @@ namespace Assignment4
   {
     static void Main(string[] args)
     {
-      var graph = ReadEdges("inputTest4.txt");   // 3,3,1,1,0
+      //1 => 3,3,3,0,0
+      //2 => 6,3,2,1,0
+      //3 => 7,1,0,0,0
+      //4 => 3,3,1,1,0
+      var graph = ReadEdges("input.txt");
 
       Console.WriteLine("Graph imported.");
 
@@ -50,7 +54,7 @@ namespace Assignment4
           .Select(x => int.Parse(x))
           .ToArray();
 
-        graph.Add(vals[0] - 1, vals[1] - 1);
+        graph.Add(vals[0], vals[1]);
       }
 
       return graph;
@@ -153,7 +157,6 @@ namespace Assignment4
     public void Dfs(Vertex start, Action<Vertex> action, bool reverse = false)
     {
       start.Explored = true;
-      action(start);
 
       var connected = GetConnected(start, reverse);
       for (int i = 0; i < connected.Count; i++)
@@ -164,21 +167,29 @@ namespace Assignment4
           Dfs(vertex, action, reverse);
         }
       }
+
+      action(start);
     }
 
     public List<int> FindScc()
     {
+      Console.WriteLine("Finding sincs");
+
       var list = new List<Vertex>();
-      for (int i = 0; i < _VertexList.Count; i++)
+      for (int i = _VertexList.Count - 1; i >= 0; i--)
       {
-        var vertex = this[i];
+        var vertex = _VertexList[i + 1];
         if (!vertex.Explored)
         {
-          Dfs(vertex, v => list.Add(v), true);
+          var lst = new List<Vertex>();
+          Dfs(vertex, v => lst.Add(v), true);
+        //  lst.Reverse();
+          list.AddRange(lst);
         }
       }
 
       ResetExplored();
+      Console.WriteLine("Finding scc's");
 
       var sccSizes = new List<int>();
       for (int i = list.Count - 1; i >= 0; i--)
