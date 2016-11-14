@@ -23,7 +23,7 @@ namespace Assignment4
       List<int> list = null;
       var t = new Thread(() => {
         list = graph.FindScc();
-      }, 10000000);
+      }, 9000000);
 
       t.Start();
       t.Join();
